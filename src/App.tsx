@@ -1,8 +1,11 @@
+import GridCanvas from './components/GirdCanvas';
 import './App.css';
 
 function App() {
   return (
-    <div>
+    <div className='main'>
+      <GridCanvas/>
+      <div></div>
     </div>
   );
 }

@@ -15,5 +15,14 @@
         width: 48px;
         height: 48px;
         cursor: pointer;
+
+        &:hover {
+            border-radius: 4px;
+            background-color: #d6ecfa;
+
+            path {
+                stroke: #2b90d9;
+            }
+        }
     }
 }

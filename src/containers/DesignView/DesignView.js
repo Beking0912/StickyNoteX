@@ -8,6 +8,7 @@ import Note from "../../components/Note";
 import ToolBar from "../ToolBar";
 
 import getInitialData, { defaultSize } from "../../types/creator";
+import { getCreatingDirection } from "../../helpers/utils";
 
 import "./styles.scss";
 
@@ -15,6 +16,7 @@ export default class DesignView extends PureComponent {
   static propTypes = {
     mode: PropTypes.string,
     noteList: PropTypes.array,
+    selection: PropTypes.array,
     dispatch: PropTypes.func,
   };
 
@@ -28,26 +30,15 @@ export default class DesignView extends PureComponent {
 
   handleMouseDown = (e) => {
     e.stopPropagation();
-    const { mode } = this.props;
+    const { mode, dispatch } = this.props;
+    dispatch({ type: "selection:update:state", payload: { selection: [] } });
+
     if (mode === "note") {
-      this.handleNoteMouseDown(e);
+      this.handleNoteCreate(e);
     }
   };
 
-  getDirection = ({ x, y, startX, startY, clientX, clientY }) => {
-    if (x > 0 && y > 0) {
-      return { x: startX, y: startY };
-    }
-    if (x > 0 && y < 0) {
-      return { x: startX, y: clientY };
-    }
-    if (x < 0 && y > 0) {
-      return { x: clientX, y: startY };
-    }
-    return { x: clientX, y: clientY };
-  };
-
-  handleNoteMouseDown = (e) => {
+  handleNoteCreate = (e) => {
     const { clientX: startX, clientY: startY } = e;
 
     const activeDiv = document.createElement("div");
@@ -66,7 +57,7 @@ export default class DesignView extends PureComponent {
       const deltaX = clientX - startX;
       const deltaY = clientY - startY;
 
-      const { x, y } = this.getDirection({
+      const { x, y } = getCreatingDirection({
         x: deltaX,
         y: deltaY,
         startX,
@@ -96,11 +87,11 @@ export default class DesignView extends PureComponent {
         x: Math.max(startX, tempNote.x ?? 0),
         y: Math.max(startY, tempNote.y ?? 0),
         w: Math.max(defaultSize.w, tempNote.w ?? 0),
-        h: Math.max(defaultSize.h, tempNote.h ?? 0)
+        h: Math.max(defaultSize.h, tempNote.h ?? 0),
       };
 
       const note = getInitialData("note", noteProps);
-      this.props.dispatch({ type: "note:add:state", payload: { note }});
+      this.props.dispatch({ type: "note:add:state", payload: { note } });
 
       this.setState({ tempNote: {} });
 
@@ -113,16 +104,18 @@ export default class DesignView extends PureComponent {
   };
 
   handleSaveNote = (note) => {
-    this.props.dispatch({ type: "entry:update:note", payload: { note }});
-  }
+    this.props.dispatch({ type: "entry:update:note", payload: { note } });
+  };
 
-  handleSelectNote = () => {
-    this.props.dispatch({ type: "note:toggle:mode", payload: { mode: "" }});
-  }
+  handleSelectNote = (id) => {
+    this.props.dispatch({ type: "note:toggle:mode", payload: { mode: "" } });
+    this.props.dispatch({ type: "entry:update:selection", payload: { id } });
+  };
 
   render() {
-    const { mode, noteList } = this.props;
+    const { mode, noteList, selection } = this.props;
     const isCreateNote = mode === "note";
+    console.error(selection)
 
     return (
       <div
@@ -133,7 +126,13 @@ export default class DesignView extends PureComponent {
         <ToolBar />
 
         {noteList.map((note) => (
-          <Note key={note.nid} note={note} onSaveNote={this.handleSaveNote} onSelect={this.handleSelectNote}/>
+          <Note
+            key={note.nid}
+            note={note}
+            isSelected={selection.includes(note.nid)}
+            onSelect={this.handleSelectNote}
+            onSave={this.handleSaveNote}
+          />
         ))}
 
         {/* <EventListener

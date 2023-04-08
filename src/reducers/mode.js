@@ -1,5 +1,6 @@
 const initialState = {
-  mode: '',
+  mode: "",
+  selection: [],
   noteList: [],
 };
 
@@ -7,15 +8,19 @@ const mode = (state = initialState, action) => {
   const { type, payload } = action;
 
   switch (type) {
-    case 'note:update:state':
+    case "note:update:state":
       const { noteList } = payload;
       return { ...state, noteList };
 
-    case 'note:toggle:mode':
+    case "selection:update:state":
+      const { selection } = payload;
+      return { ...state, selection };
+
+    case "note:toggle:mode":
       const { mode } = payload;
       return { ...state, mode };
 
-    case 'note:add:state':
+    case "note:add:state":
       const { note } = payload;
       return { ...state, noteList: [...state.noteList, note] };
 

@@ -3,27 +3,31 @@ import { NoteProps } from "../../types/NodeType";
 import "./styles.scss";
 
 type NodeType = {
+  isSelected: boolean;
   note: NoteProps;
-  onSaveNote: (note: NoteProps) => void;
-  onSelect: () => void;
+  onSave: (note: NoteProps) => void;
+  onSelect: (nid: string) => void;
 };
 
 export default class Note extends PureComponent<NodeType> {
   handleEdit = (e: any) => {
-    const { note, onSaveNote } = this.props;
+    const { note, onSave } = this.props;
     const text = e.target.value;
-    onSaveNote({ ...note, text });
+    onSave({ ...note, text });
   };
 
   handleClick = (e: MouseEvent) => {
     e.stopPropagation();
-    this.props.onSelect();
+    const { onSelect, note } = this.props;  
+    onSelect(note.nid);
   }
 
   render() {
     const {
+      isSelected,
       note: { x, y, z, w, h, text },
     } = this.props;
+
     const styles = {
       top: y,
       left: x,

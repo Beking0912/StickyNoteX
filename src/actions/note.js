@@ -1,4 +1,4 @@
-import { getCurrentMode, getNoteList } from "./selectors";
+import { getCurrentMode, getNoteList, getSelection } from "./selectors";
 
 export const noteEntry = {
   "entry:toggle:mode": ({ getState, dispatch }, { payload: { mode } }) => {
@@ -16,5 +16,12 @@ export const noteEntry = {
 
     currentList[indexToUpdate] = note;
     dispatch({ type: "note:update:state", payload: { noteList: [...currentList] } });
+  },
+  "entry:update:selection": ({ getState, dispatch }, { payload: { id } }) => {
+    const state = getState();
+    const selection = getSelection(state);
+
+    if (selection.includes(id)) return;
+    dispatch({ type: "selection:update:state", payload: { selection: [id] } });
   }
 };

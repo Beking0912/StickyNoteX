@@ -1,14 +1,10 @@
-import GridCanvas from './components/GirdCanvas';
-import ToolBar from './containers/ToolBar';
-
+import DesignView from './containers/DesignView';
 import './App.css';
 
 function App() {
   return (
     <div className='main'>
-      <GridCanvas/>
-      <ToolBar/>
-      <div></div>
+      <DesignView/>
     </div>
   );
 }

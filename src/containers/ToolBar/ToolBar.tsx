@@ -12,7 +12,8 @@ export default class ToolBar extends PureComponent<any> {
     dispatch: PropTypes.func,
   };
 
-  toggleNoteMode = () => {
+  toggleNoteMode = (e) => {
+    e.stopPropagation();
     const { dispatch } = this.props
     dispatch({ type: 'entry:toggle:mode', payload: { mode: 'note' } })
   }

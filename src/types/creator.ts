@@ -1,7 +1,7 @@
 import { getRandomId } from "../helpers/random";
 
 export const defaultSize = {
-  w: 200,
+  w: 250,
   h: 250
 }
 
@@ -12,6 +12,7 @@ const getInitialData = (type: string, props: any) => {
         x: 0,
         y: 0,
         z: 1,
+        text: '',
         ...defaultSize,
         ...props
     }

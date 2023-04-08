@@ -8,7 +8,8 @@ const mode = (state = initialState, action) => {
 
   switch (type) {
     case 'note:update:state':
-      return Object.assign({}, state, payload);
+      const { noteList } = payload;
+      return { ...state, noteList };
 
     case 'note:toggle:mode':
       const { mode } = payload;

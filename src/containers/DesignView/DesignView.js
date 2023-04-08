@@ -112,6 +112,14 @@ export default class DesignView extends PureComponent {
     document.addEventListener("mouseup", onMoveUp);
   };
 
+  handleSaveNote = (note) => {
+    this.props.dispatch({ type: "entry:update:note", payload: { note }});
+  }
+
+  handleSelectNote = () => {
+    this.props.dispatch({ type: "note:toggle:mode", payload: { mode: "" }});
+  }
+
   render() {
     const { mode, noteList } = this.props;
     const isCreateNote = mode === "note";
@@ -125,7 +133,7 @@ export default class DesignView extends PureComponent {
         <ToolBar />
 
         {noteList.map((note) => (
-          <Note key={note.nid} note={note} />
+          <Note key={note.nid} note={note} onSaveNote={this.handleSaveNote} onSelect={this.handleSelectNote}/>
         ))}
 
         {/* <EventListener

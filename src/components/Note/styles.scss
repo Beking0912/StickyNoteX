@@ -1,5 +1,19 @@
 .note {
+    display: flex;
     position: absolute;
+    background-color: #cbe86b;
+    box-shadow: 0px 2px 10px rgba(5, 0, 56, 0.08);
+}
+
+.note-content {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 15px;
+    font-size: 14px;
+    cursor: text;
+    overflow: scroll;
+    resize: none;
     background-color: #cbe86b;
 }
 

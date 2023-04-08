@@ -3,6 +3,10 @@ html, body, #root, .main {
     height: 100%;
 }
 
+.main {
+    cursor: pointer;
+}
+
 .main canvas {
     background: #f4f4f4;
 }

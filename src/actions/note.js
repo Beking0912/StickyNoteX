@@ -1,5 +1,4 @@
-import getInitialData from "../types/creator";
-import { getCurrentMode } from "./selectors";
+import { getCurrentMode, getNoteList } from "./selectors";
 
 export const noteEntry = {
   "entry:toggle:mode": ({ getState, dispatch }, { payload: { mode } }) => {
@@ -8,20 +7,14 @@ export const noteEntry = {
     const targetMode = currentMode === mode ? "" : mode;
     dispatch({ type: "note:toggle:mode", payload: { mode: targetMode } });
   },
-  "entry:note:create": ({ getState, dispatch }, { payload: { e } }) => {
-    const { clientX, clientY } = e;
-    const props = { x: clientX, y: clientY };
-    const newNote = getInitialData('note', props);
-
-    dispatch({ type: "note:add:state", payload: { note: newNote } });
-  },
-  "entry:mouse:down": ({ getState, dispatch }, { payload: { e } }) => {
+  "entry:update:note": ({ getState, dispatch }, { payload: { note } }) => {
     const state = getState();
-    const currentMode = getCurrentMode(state);
-    const isNoteMode = currentMode === 'note';
+    const currentList = getNoteList(state);
 
-    if (isNoteMode) {
-      dispatch({ type: "entry:note:create", payload: { e } });
-    }
-  },
+    const indexToUpdate = currentList.findIndex(obj => obj.nid === note.nid);
+    if (indexToUpdate === -1) return;
+
+    currentList[indexToUpdate] = note;
+    dispatch({ type: "note:update:state", payload: { noteList: [...currentList] } });
+  }
 };

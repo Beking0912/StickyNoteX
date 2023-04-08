@@ -1,5 +1,5 @@
 import GridCanvas from './components/GirdCanvas';
-import ToolBar from './ToolBar';
+import ToolBar from './containers/ToolBar';
 
 import './App.css';
 

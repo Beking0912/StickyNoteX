@@ -1,12 +1,18 @@
+import { getRandomId } from "../helpers/random";
+
+export const defaultSize = {
+  w: 200,
+  h: 250
+}
+
 const getInitialData = (type: string, props: any) => {
   if (type === 'note') {
     const note = {
-        nid: 'okk',
+        nid: getRandomId('n'),
         x: 0,
         y: 0,
         z: 1,
-        w: 200,
-        h: 250,
+        ...defaultSize,
         ...props
     }
     return note;

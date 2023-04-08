@@ -1,4 +1,4 @@
-import { PureComponent } from "react";
+import { PureComponent, createRef } from "react";
 import PropTypes from "prop-types";
 import cx from "classnames";
 
@@ -6,6 +6,8 @@ import cx from "classnames";
 import GridCanvas from "../../components/GirdCanvas";
 import Note from "../../components/Note";
 import ToolBar from "../ToolBar";
+
+import getInitialData, { defaultSize } from "../../types/creator";
 
 import "./styles.scss";
 
@@ -16,10 +18,98 @@ export default class DesignView extends PureComponent {
     dispatch: PropTypes.func,
   };
 
+  constructor(props) {
+    super(props);
+    this.activeDivRef = createRef();
+    this.state = {
+      tempNote: {},
+    };
+  }
+
   handleMouseDown = (e) => {
     e.stopPropagation();
-    const { dispatch } = this.props;
-    dispatch({ type: "entry:mouse:down", payload: { e } });
+    const { mode } = this.props;
+    if (mode === "note") {
+      this.handleNoteMouseDown(e);
+    }
+  };
+
+  getDirection = ({ x, y, startX, startY, clientX, clientY }) => {
+    if (x > 0 && y > 0) {
+      return { x: startX, y: startY };
+    }
+    if (x > 0 && y < 0) {
+      return { x: startX, y: clientY };
+    }
+    if (x < 0 && y > 0) {
+      return { x: clientX, y: startY };
+    }
+    return { x: clientX, y: clientY };
+  };
+
+  handleNoteMouseDown = (e) => {
+    const { clientX: startX, clientY: startY } = e;
+
+    const activeDiv = document.createElement("div");
+    activeDiv.id = "createIn";
+    activeDiv.style.backgroundColor = `#c4bebe80`;
+    activeDiv.style.position = "absolute";
+    activeDiv.style.zIndex = 100;
+    this.activeDivRef.current = activeDiv;
+    document.body.appendChild(activeDiv);
+
+    const onMove = (e) => {
+      const activeDiv = this.activeDivRef.current;
+      if (!activeDiv) return;
+
+      const { clientX, clientY } = e;
+      const deltaX = clientX - startX;
+      const deltaY = clientY - startY;
+
+      const { x, y } = this.getDirection({
+        x: deltaX,
+        y: deltaY,
+        startX,
+        startY,
+        clientX,
+        clientY,
+      });
+
+      const w = Math.abs(deltaX);
+      const h = Math.abs(deltaY);
+      this.setState({ tempNote: { x, y, w, h } });
+
+      activeDiv.style.left = `${x}px`;
+      activeDiv.style.top = `${y}px`;
+      activeDiv.style.width = `${w}px`;
+      activeDiv.style.height = `${h}px`;
+    };
+
+    const onMoveUp = () => {
+      const activeDiv = document.getElementById("createIn");
+      if (!activeDiv) return;
+
+      document.body.removeChild(activeDiv);
+
+      const { tempNote } = this.state;
+      const noteProps = {
+        x: Math.max(startX, tempNote.x ?? 0),
+        y: Math.max(startY, tempNote.y ?? 0),
+        w: Math.max(defaultSize.w, tempNote.w ?? 0),
+        h: Math.max(defaultSize.h, tempNote.h ?? 0)
+      };
+
+      const note = getInitialData("note", noteProps);
+      this.props.dispatch({ type: "note:add:state", payload: { note }});
+
+      this.setState({ tempNote: {} });
+
+      document.removeEventListener("mousemove", onMove);
+      document.removeEventListener("mouseup", onMoveUp);
+    };
+
+    document.addEventListener("mousemove", onMove);
+    document.addEventListener("mouseup", onMoveUp);
   };
 
   render() {

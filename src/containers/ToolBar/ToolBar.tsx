@@ -1,4 +1,4 @@
-import { PureComponent } from "react";
+import { MouseEvent, PureComponent } from "react";
 import PropTypes from "prop-types";
 import cx from "classnames";
 
@@ -12,7 +12,7 @@ export default class ToolBar extends PureComponent<any> {
     dispatch: PropTypes.func,
   };
 
-  toggleNoteMode = (e) => {
+  toggleNoteMode = (e: MouseEvent) => {
     e.stopPropagation();
     const { dispatch } = this.props
     dispatch({ type: 'entry:toggle:mode', payload: { mode: 'note' } })

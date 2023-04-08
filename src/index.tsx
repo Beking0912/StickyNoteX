@@ -1,4 +1,5 @@
 import React from "react";
+// @ts-ignore
 import { createReduxEntry } from "redux-entry";
 
 import ReactDOM from "react-dom/client";

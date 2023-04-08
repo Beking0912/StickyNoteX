@@ -24,5 +24,9 @@
                 stroke: #2b90d9;
             }
         }
+
+        &:nth-of-type(2n) {
+            margin-top: 8px;
+        }
     }
 }

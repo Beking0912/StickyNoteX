@@ -14,16 +14,29 @@ export default class ToolBar extends PureComponent<any> {
 
   toggleNoteMode = (e: MouseEvent) => {
     e.stopPropagation();
-    const { dispatch } = this.props
-    dispatch({ type: 'entry:toggle:mode', payload: { mode: 'note' } })
-  }
+    const { dispatch } = this.props;
+    dispatch({ type: "entry:toggle:mode", payload: { mode: "note" } });
+  };
+
+  toggleSelectMode = (e: MouseEvent) => {
+    e.stopPropagation();
+    const { mode, dispatch } = this.props;
+    if (mode === "") return;
+    dispatch({ type: "note:toggle:mode", payload: { mode: "" } });
+  };
 
   render() {
     const { mode } = this.props;
     const isCreateNote = mode === "note";
     return (
       <div className="bar-container">
-        <div>{isCreateNote ? "note mode" : ""}</div>
+        <div
+          className={cx("bar-icon", { active: !isCreateNote })}
+          onMouseDown={this.toggleSelectMode}
+        >
+          <Icon iconName="toolbar/select" className="note-icon" />
+        </div>
+
         <div
           className={cx("bar-icon", { active: isCreateNote })}
           onMouseDown={this.toggleNoteMode}

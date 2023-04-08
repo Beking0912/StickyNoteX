@@ -1,13 +1,17 @@
 import { PureComponent } from "react";
 import PropTypes from "prop-types";
+import cx from "classnames";
 
 // import EventListener from "../../helpers/EventListener";
 import GridCanvas from "../../components/GirdCanvas";
-import ToolBar from "../ToolBar";
 import Note from "../../components/Note";
+import ToolBar from "../ToolBar";
+
+import "./styles.scss";
 
 export default class DesignView extends PureComponent {
   static propTypes = {
+    mode: PropTypes.string,
     noteList: PropTypes.array,
     dispatch: PropTypes.func,
   };
@@ -19,11 +23,15 @@ export default class DesignView extends PureComponent {
   };
 
   render() {
-    const { noteList } = this.props;
+    const { mode, noteList } = this.props;
+    const isCreateNote = mode === "note";
 
     return (
-      <div className="main" onMouseDown={this.handleMouseDown}>
-        <GridCanvas/>
+      <div
+        className={cx("design-view", { active: isCreateNote })}
+        onMouseDown={this.handleMouseDown}
+      >
+        <GridCanvas />
         <ToolBar />
 
         {noteList.map((note) => (

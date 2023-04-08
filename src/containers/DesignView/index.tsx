@@ -2,12 +2,16 @@ import { connect } from "react-redux";
 import { createSelector } from "reselect";
 
 import DesignView from "./DesignView";
-import { getNoteList } from "../../actions/selectors";
+import { getNoteList, getCurrentMode } from "../../actions/selectors";
 
-const getAttributes = createSelector([getNoteList], (noteList) => {
-  return {
-    noteList,
-  };
-});
+const getAttributes = createSelector(
+  [getNoteList, getCurrentMode],
+  (noteList, mode) => {
+    return {
+      noteList,
+      mode,
+    };
+  }
+);
 
 export default connect((state) => getAttributes(state))(DesignView);

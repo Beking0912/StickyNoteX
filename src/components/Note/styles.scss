@@ -6,6 +6,7 @@
 }
 
 .is-selected {
+    z-index: 2 !important; // TODO: optimize
     box-shadow: 0px 2px 10px rgba(5, 0, 56, 0.08), 0px 0px 0px 2px #00dffc;
 }
 

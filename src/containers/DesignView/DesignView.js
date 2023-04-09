@@ -24,22 +24,26 @@ export default class DesignView extends PureComponent {
     super(props);
     this.activeDivRef = createRef();
     this.state = {
+      isEditing: null,
       tempNote: {},
     };
   }
+
+  handleEditNote = (isEditing) => this.setState({ isEditing })
 
   handleMouseDown = (e) => {
     e.stopPropagation();
     const { mode, dispatch } = this.props;
     dispatch({ type: "selection:update:state", payload: { selection: [] } });
+    this.handleEditNote(null);
 
     if (mode === "note") {
       this.handleNoteCreate(e);
     }
   };
 
-  handleNoteCreate = (e) => {
-    const { clientX: startX, clientY: startY } = e;
+  handleNoteCreate = (event) => {
+    const { clientX: startX, clientY: startY } = event;
 
     const activeDiv = document.createElement("div");
     activeDiv.id = "createIn";
@@ -113,9 +117,9 @@ export default class DesignView extends PureComponent {
   };
 
   render() {
+    const { isEditing } = this.state;
     const { mode, noteList, selection } = this.props;
     const isCreateNote = mode === "note";
-    console.error(selection)
 
     return (
       <div
@@ -129,9 +133,11 @@ export default class DesignView extends PureComponent {
           <Note
             key={note.nid}
             note={note}
+            isEditing={isEditing === note.nid}
             isSelected={selection.includes(note.nid)}
             onSelect={this.handleSelectNote}
             onSave={this.handleSaveNote}
+            onEdit={this.handleEditNote} 
           />
         ))}
 

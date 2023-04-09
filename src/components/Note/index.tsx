@@ -1,33 +1,86 @@
 import { MouseEvent, PureComponent } from "react";
+import cx from "classnames";
 import { NoteProps } from "../../types/NodeType";
 import "./styles.scss";
 
-type NodeType = {
+type NoteType = {
+  isEditing: boolean;
   isSelected: boolean;
   note: NoteProps;
   onSave: (note: NoteProps) => void;
   onSelect: (nid: string) => void;
+  onEdit: (nid: string | null) => void;
 };
 
-export default class Note extends PureComponent<NodeType> {
+export default class Note extends PureComponent<NoteType> {
   handleEdit = (e: any) => {
-    const { note, onSave } = this.props;
-    const text = e.target.value;
-    onSave({ ...note, text });
+    const { note, isEditing, onSave } = this.props;
+    if (!isEditing) return;
+    onSave({ ...note, text: e.target.value });
   };
 
-  handleClick = (e: MouseEvent) => {
+  handleMouseDown = (e: MouseEvent) => {
     e.stopPropagation();
-    const { onSelect, note } = this.props;  
-    onSelect(note.nid);
+
+    const { isEditing, isSelected, note, onEdit, onSave, onSelect } = this.props;
+    if (isSelected && isEditing) return;
+    if (!isSelected) onSelect(note.nid);
+
+    const { clientX: startX, clientY: startY } = e;
+
+    let isDragging = false;
+    const onMove = (event: any) => {
+      isDragging = true;
+      const { clientX, clientY } = event;
+      const deltaX = clientX - startX;
+      const deltaY = clientY - startY;
+      onSave({ ...note, x: note.x + deltaX, y: note.y + deltaY });
+    };
+
+    const onMoveUp = () => {
+      if (!isDragging) onEdit(note.nid);
+      document.removeEventListener("mousemove", onMove);
+      document.removeEventListener("mouseup", onMoveUp);
+    };
+
+    document.addEventListener("mousemove", onMove);
+    document.addEventListener("mouseup", onMoveUp);
+  };
+
+  handleDragNote = (event: MouseEvent) => {
+    const { note, onSave } = this.props;
+    const { clientX: startX, clientY: startY } = event;
+    this.setState({ isDragging: true });
+
+    const onMove = (e: any) => {
+      const { clientX, clientY } = e;
+      const deltaX = clientX - startX;
+      const deltaY = clientY - startY;
+      onSave({ ...note, x: note.x + deltaX, y: note.y + deltaY });
+    };
+
+    const onMoveUp = () => {
+      this.setState({ isDragging: false });
+      document.removeEventListener("mousemove", onMove);
+      document.removeEventListener("mouseup", onMoveUp);
+    };
+
+    document.addEventListener("mousemove", onMove);
+    document.addEventListener("mouseup", onMoveUp);
   }
 
   render() {
     const {
+      isEditing,
       isSelected,
       note: { x, y, z, w, h, text },
     } = this.props;
 
+    const className = cx(
+      "note",
+      { "is-selected": isSelected },
+      { "is-editing": isEditing }
+    );
     const styles = {
       top: y,
       left: x,
@@ -37,13 +90,20 @@ export default class Note extends PureComponent<NodeType> {
     };
 
     return (
-      <div className="note" style={styles} onMouseDown={this.handleClick}>
-        <textarea
-          className="note-content"
-          value={text}
-          onInput={this.handleEdit}
-          placeholder="Type something..."
-        ></textarea>
+      <div className={className} style={styles} onMouseDown={this.handleMouseDown}>
+        {isEditing ? (
+          <textarea
+            value={text}
+            onInput={this.handleEdit}
+            placeholder="Type something..."
+          ></textarea>
+        ) : (
+          <textarea
+            readOnly
+            value={text}
+            placeholder="Type something..."
+          ></textarea>
+        )}
       </div>
     );
   }

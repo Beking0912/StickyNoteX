@@ -92,6 +92,7 @@ export default class Note extends PureComponent<NoteType> {
         className={className}
         style={styles}
         note={note}
+        isSelected={isSelected}
         onSave={onSave}
         onMouseDown={this.handleMouseDown}
       >

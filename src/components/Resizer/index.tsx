@@ -18,6 +18,10 @@ const handlers = [
   ['box-right', 'r'],
   ['box-bottom', 'b'],
   ['box-left', 'l'],
+  ['box-top-left', 'tl'],
+  ['box-top-right', 'tr'],
+  ['box-bottom-right', 'br'],
+  ['box-bottom-left', 'bl'],
 ]
 
 export function Resizer({
@@ -31,27 +35,41 @@ export function Resizer({
 }: ResizerProps) {
   const ref = useRef<HTMLDivElement>(null)
 
+  const isValid = ({ w = defaultSize.w, h = defaultSize.h }) => w >= defaultSize.w && h >= defaultSize.h
+
   const onResize = (event: any) => {
     event.stopPropagation()
 
     const { clientX: startX, clientY: startY } = event
     const direction = event.target.dataset.direction
 
-    let props: NoteProps = { ...note }
+    let props = { ...note }
     const onMove = (e: any) => {
       const { clientX, clientY } = e
       const deltaX = clientX - startX
       const deltaY = clientY - startY
 
-      if (direction === 't' && note.h - deltaY >= defaultSize.h) {
-        props = { ...note, y: note.y + deltaY, h: note.h - deltaY }
-      } else if (direction === 'b' && note.h + deltaY >= defaultSize.h) {
-        props = { ...note, h: note.h + deltaY }
-      } else if (direction === 'l' && note.w - deltaX >= defaultSize.w) {
-        props = { ...note, x: note.x + deltaX, w: note.w - deltaX }
-      } else if (direction === 'r' && note.w + deltaX >= defaultSize.w) {
-        props = { ...note, w: note.w + deltaX }
+      if (direction === 't' && isValid({ h: note.h - deltaY })) {
+        ;[props.y, props.h] = [note.y + deltaY, note.h - deltaY]
+      } else if (direction === 'b' && isValid({ h: note.h + deltaY })) {
+        props.h = note.h + deltaY
+      } else if (direction === 'l' && isValid({ w: note.w - deltaX })) {
+        ;[props.x, props.w] = [note.x + deltaX, note.w - deltaX]
+      } else if (direction === 'r' && isValid({ w: note.w + deltaX })) {
+        props.w = note.w + deltaX
+      } else if (direction === 'tl' && isValid({ w: note.w - deltaX, h: note.h - deltaY })) {
+        ;[props.x, props.y] = [note.x + deltaX, note.y + deltaY]
+        ;[props.w, props.h] = [note.w - deltaX, note.h - deltaY]
+      } else if (direction === 'tr' && isValid({ w: note.w + deltaX, h: note.h - deltaY })) {
+        props.y = note.y + deltaY
+        ;[props.w, props.h] = [note.w + deltaX, note.h - deltaY]
+      } else if (direction === 'br' && isValid({ w: note.w + deltaX, h: note.h + deltaY })) {
+        ;[props.w, props.h] = [note.w + deltaX, note.h + deltaY]
+      } else if (direction === 'bl' && isValid({ w: note.w - deltaX, h: note.h + deltaY })) {
+        props.x = note.x + deltaX
+        ;[props.w, props.h] = [note.w - deltaX, note.h + deltaY]
       }
+
       if (props.x && props.y && props.w && props.h) {
         ref.current!.style.width = `${props.w}px`
         ref.current!.style.height = `${props.h}px`
@@ -60,7 +78,7 @@ export function Resizer({
       }
     }
     const onMoveUp = () => {
-      onSave(props as NoteProps)
+      onSave({ ...note, ...props })
       document.removeEventListener('mousemove', onMove)
       document.removeEventListener('mouseup', onMoveUp)
     }

@@ -1,35 +1,71 @@
 .resizer-box {
-    position: absolute;
+  position: absolute;
 }
 
 .box-top {
-    position: absolute;
-    width: 100%;
-    height: 6px;
-    top: -4px;
-    cursor: row-resize;
+  position: absolute;
+  width: 100%;
+  height: 6px;
+  top: -4px;
+  cursor: row-resize;
 }
 
 .box-right {
-    position: absolute;
-    height: 100%;
-    width: 6px;
-    right: -4px;
-    cursor: col-resize;
+  position: absolute;
+  height: 100%;
+  width: 6px;
+  right: -4px;
+  cursor: col-resize;
 }
 
 .box-bottom {
-    position: absolute;
-    width: 100%;
-    height: 6px;
-    bottom: -4px;
-    cursor: row-resize;
+  position: absolute;
+  width: 100%;
+  height: 6px;
+  bottom: -4px;
+  cursor: row-resize;
 }
 
 .box-left {
-    position: absolute;
-    height: 100%;
-    width: 6px;
-    left: -4px;
-    cursor: col-resize;
+  position: absolute;
+  height: 100%;
+  width: 6px;
+  left: -4px;
+  cursor: col-resize;
+}
+
+.box-top-left {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  top: -5px;
+  left: -5px;
+  cursor: nwse-resize;
+}
+
+.box-top-right {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  top: -5px;
+  right: -5px;
+  cursor: nesw-resize;
+}
+
+.box-bottom-right {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  bottom: -5px;
+  right: -5px;
+  cursor: nwse-resize;
+}
+
+.box-bottom-left {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  bottom: -5px;
+  left: -5px;
+  cursor: nesw-resize;
 }

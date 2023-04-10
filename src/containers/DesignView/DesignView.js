@@ -33,6 +33,8 @@ export default class DesignView extends PureComponent {
   handleEditNote = (isEditing) => this.setState({ isEditing })
 
   handleKeyDown = (e) => {
+    const { isEditing } = this.state;
+    if (isEditing) return;
     const { selection, dispatch } = this.props;
     if (selection.length === 0) return;
 

@@ -13,6 +13,7 @@ const getInitialData = (type: string, props: any) => {
         y: 0,
         z: 1,
         text: '',
+        color: '#cbe86b',
         ...defaultSize,
         ...props
     }

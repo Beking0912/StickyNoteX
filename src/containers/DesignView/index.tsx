@@ -2,15 +2,16 @@ import { connect } from "react-redux";
 import { createSelector } from "reselect";
 
 import DesignView from "./DesignView";
-import { getSelection, getNoteList, getCurrentMode } from "../../actions/selectors";
+import { getSelection, getNoteList, getCurrentMode, getHistoryColor } from "../../actions/selectors";
 
 const getAttributes = createSelector(
-  [getSelection, getNoteList, getCurrentMode],
-  (selection, noteList, mode) => {
+  [getSelection, getNoteList, getCurrentMode, getHistoryColor],
+  (selection, noteList, mode, historyColor) => {
     return {
       selection,
       noteList,
       mode,
+      historyColor
     };
   }
 );

@@ -72,7 +72,7 @@ export default class Note extends PureComponent<NoteType> {
 
   render() {
     const { isEditing, isSelected, note, onSave } = this.props
-    const { x, y, z, w, h, text } = note
+    const { x, y, z, w, h, text, color } = note
 
     const className = cx(
       'note',
@@ -85,6 +85,7 @@ export default class Note extends PureComponent<NoteType> {
       zIndex: z,
       width: w,
       height: h,
+      backgroundColor: color
     }
 
     return (

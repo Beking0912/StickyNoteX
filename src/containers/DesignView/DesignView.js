@@ -15,6 +15,7 @@ import "./styles.scss";
 export default class DesignView extends PureComponent {
   static propTypes = {
     mode: PropTypes.string,
+    historyColor: PropTypes.string,
     noteList: PropTypes.array,
     selection: PropTypes.array,
     dispatch: PropTypes.func,
@@ -95,12 +96,14 @@ export default class DesignView extends PureComponent {
 
       document.body.removeChild(activeDiv);
 
+      const { historyColor } = this.props;
       const { tempNote } = this.state;
       const noteProps = {
         x: Math.max(startX, tempNote.x ?? 0),
         y: Math.max(startY, tempNote.y ?? 0),
         w: Math.max(defaultSize.w, tempNote.w ?? 0),
         h: Math.max(defaultSize.h, tempNote.h ?? 0),
+        color: historyColor
       };
 
       const note = getInitialData("note", noteProps);

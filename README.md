@@ -7,10 +7,11 @@ StickyNoteX is a note-taking app designed to keep track of your daily to-do and 
 - [x] Type in
 - [x] Drag to reposition
 - [x] Delete note by delete key
-- [ ] Resize notes
-- [ ] Customize style
+- [x] Resize notes
+- [x] Customize background color
 - [ ] Rich Text
 - [ ] keyboard shortcuts
+- [ ] Copy and Paste
 - [ ] Undo and redo
 - [ ] Share notes with other users
 - [ ] Real-time collaboration

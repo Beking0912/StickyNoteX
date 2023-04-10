@@ -15,8 +15,10 @@
 - [ ] keyboard shortcuts
 - [ ] Copy and Paste
 - [ ] Undo and redo
+- [ ] Data Storage
 - [ ] Share notes with other users
 - [ ] Real-time collaboration
+- [ ] Packaged as a desktop application
 
 ## Prerequisites
 Before running the project, make sure you have the following software installed:

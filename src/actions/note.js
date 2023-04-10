@@ -17,6 +17,17 @@ export const noteEntry = {
     currentList[indexToUpdate] = note;
     dispatch({ type: "note:update:state", payload: { noteList: [...currentList] } });
   },
+  "entry:delete:note": ({ getState, dispatch }) => {
+    const state = getState();
+    const currentList = getNoteList(state);
+    const selection = getSelection(state);
+
+    const indexToUpdate = currentList.findIndex(obj => obj.nid === selection[0]);
+    if (indexToUpdate === -1) return;
+
+    currentList.splice(indexToUpdate, 1);
+    dispatch({ type: "note:update:state", payload: { noteList: [...currentList] } });
+  },
   "entry:update:selection": ({ getState, dispatch }, { payload: { id } }) => {
     const state = getState();
     const selection = getSelection(state);

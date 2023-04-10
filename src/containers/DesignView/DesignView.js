@@ -31,6 +31,15 @@ export default class DesignView extends PureComponent {
 
   handleEditNote = (isEditing) => this.setState({ isEditing })
 
+  handleKeyDown = (e) => {
+    const { selection, dispatch } = this.props;
+    if (selection.length === 0) return;
+
+    if (e.keyCode === 8) {
+      dispatch({ type: "entry:delete:note" });
+    }
+  }
+
   handleMouseDown = (e) => {
     e.stopPropagation();
     const { mode, dispatch } = this.props;
@@ -125,6 +134,7 @@ export default class DesignView extends PureComponent {
       <div
         className={cx("design-view", { active: isCreateNote })}
         onMouseDown={this.handleMouseDown}
+        onKeyDown={this.handleKeyDown}
       >
         <GridCanvas />
         <ToolBar />

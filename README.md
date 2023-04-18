@@ -6,7 +6,7 @@
 ## Features
 - [x] Click to create notes
 - [x] Click-and-drag to create notes
-- [x] Type in
+- [x] Edit text using contentEditable
 - [x] Drag to reposition
 - [x] Delete note by delete key
 - [x] Resize notes

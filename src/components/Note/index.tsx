@@ -19,17 +19,10 @@ export default class Note extends PureComponent<NoteType> {
     html: this.props.note.text,
   }
 
-  // handleEdit = (e: any) => {
-  //   const { note, isEditing, onSave } = this.props
-  //   if (!isEditing) return
-  //   onSave({ ...note, text: e.target.value })
-  // }
-
   handleMouseDown = (e: MouseEvent) => {
     e.stopPropagation()
 
     const { isEditing, isSelected, note, onSave, onSelect } = this.props
-    console.log('mouse down', isEditing)
 
     if (isSelected && isEditing) return
     if (!isSelected) onSelect(note.nid)
@@ -52,32 +45,14 @@ export default class Note extends PureComponent<NoteType> {
     document.addEventListener('mouseup', onMoveUp)
   }
 
-  handleDragNote = (event: MouseEvent) => {
-    const { note, onSave } = this.props
-    const { clientX: startX, clientY: startY } = event
-    this.setState({ isDragging: true })
-
-    const onMove = (e: any) => {
-      const { clientX, clientY } = e
-      const deltaX = clientX - startX
-      const deltaY = clientY - startY
-      onSave({ ...note, x: note.x + deltaX, y: note.y + deltaY })
-    }
-
-    const onMoveUp = () => {
-      this.setState({ isDragging: false })
-      document.removeEventListener('mousemove', onMove)
-      document.removeEventListener('mouseup', onMoveUp)
-    }
-
-    document.addEventListener('mousemove', onMove)
-    document.addEventListener('mouseup', onMoveUp)
-  }
-
   handleEditNote = (html: string) => {
     this.setState({ html })
-    const { note, isEditing, onEdit } = this.props
-    if (!isEditing) onEdit(note.nid)
+  }
+
+  handleDoubleClick = (e: MouseEvent) => {
+    e.stopPropagation()
+    const { isSelected, isEditing, note, onEdit } = this.props
+    if (isSelected && !isEditing) onEdit(note.nid)
   }
 
   render() {
@@ -107,24 +82,16 @@ export default class Note extends PureComponent<NoteType> {
         isSelected={isSelected}
         onSave={onSave}
         onMouseDown={this.handleMouseDown}
+        onDoubleClick={this.handleDoubleClick}
       >
-        {/* {isEditing ? (
-          <textarea
-            value={text}
-            onInput={this.handleEdit}
-            placeholder="Type something..."
-          ></textarea>
+        {!isEditing ? (
+          <span
+            className="edit-node"
+            dangerouslySetInnerHTML={{ __html: html }}
+          />
         ) : (
-          <textarea
-            readOnly
-            value={text}
-            placeholder="Type something..."
-          ></textarea>
-        )} */}
-        <EditNode
-          value={html}
-          onChange={this.handleEditNote}
-        />
+          <EditNode value={html} onChange={this.handleEditNote} />
+        )}
       </Resizer>
     )
   }

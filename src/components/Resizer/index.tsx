@@ -11,6 +11,7 @@ type ResizerProps = {
   children: ReactNode
   onSave: (note: NoteProps) => void
   onMouseDown?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void
+  onDoubleClick?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void
 }
 
 const handlers = [
@@ -32,6 +33,7 @@ export function Resizer({
   children,
   onSave,
   onMouseDown,
+  onDoubleClick
 }: ResizerProps) {
   const ref = useRef<HTMLDivElement>(null)
 
@@ -92,6 +94,7 @@ export function Resizer({
       className={`resizer-box ${className}`}
       style={style}
       onMouseDown={onMouseDown}
+      onDoubleClick={onDoubleClick}
     >
       {isSelected &&
         handlers.map(([className, direction]) => (

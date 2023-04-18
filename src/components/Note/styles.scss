@@ -23,9 +23,10 @@ textarea, .edit-node {
     overflow: scroll;
     resize: none;
     background-color: transparent;
+    font-family: monospace;
 }
 
-.edit-node[contenteditable]:empty::before {
+.edit-node:empty::before {
     content: 'Type something...';
     font-family: monospace;
     color: rgb(118, 118, 118);

@@ -1,7 +1,7 @@
 import { MouseEvent, PureComponent } from 'react'
 import { NoteProps } from '../../types/NodeType'
 import { Resizer } from '../Resizer'
-import EditNode from '../EditNode'
+import Editor from '../Editor'
 import cx from 'classnames'
 import './styles.scss'
 
@@ -15,10 +15,6 @@ type NoteType = {
 }
 
 export default class Note extends PureComponent<NoteType> {
-  state = {
-    html: this.props.note.text,
-  }
-
   handleMouseDown = (e: MouseEvent) => {
     e.stopPropagation()
 
@@ -51,14 +47,13 @@ export default class Note extends PureComponent<NoteType> {
 
   handleDoubleClick = (e: MouseEvent) => {
     e.stopPropagation()
-    const { isSelected, isEditing, note, onEdit } = this.props
-    if (isSelected && !isEditing) onEdit(note.nid)
+    const { isEditing, note, onEdit } = this.props
+    if (!isEditing) onEdit(note.nid)
   }
 
   render() {
     const { isEditing, isSelected, note, onSave } = this.props
     const { x, y, z, w, h, color } = note
-    const { html } = this.state
 
     const className = cx(
       'note',
@@ -84,14 +79,7 @@ export default class Note extends PureComponent<NoteType> {
         onMouseDown={this.handleMouseDown}
         onDoubleClick={this.handleDoubleClick}
       >
-        {!isEditing ? (
-          <span
-            className="edit-node"
-            dangerouslySetInnerHTML={{ __html: html }}
-          />
-        ) : (
-          <EditNode value={html} onChange={this.handleEditNote} />
-        )}
+      <Editor isEditing={isEditing} note={note} onSave={onSave}/>
       </Resizer>
     )
   }

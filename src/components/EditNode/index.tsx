@@ -3,6 +3,7 @@ import React, { Component, RefObject } from 'react'
 interface Props {
   value: string
   onChange?: (value: string) => void
+  onSave?: (value: string) => void
 }
 
 class EditNode extends Component<Props> {
@@ -30,6 +31,7 @@ class EditNode extends Component<Props> {
     if (this.props.value !== this.ref.current?.innerHTML) {
       // @ts-ignore
       this.ref.current.innerHTML = this.props.value
+      this.props.onSave && this.props.onSave(this.props.value)
     }
   }
 

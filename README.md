@@ -3,6 +3,8 @@
 # StickyNoteX
 📒 StickyNoteX is a note-taking app designed to keep track of your daily to-do and work schedule, a React app using Redux for state management and TypeScript for type checking.
 
+![ezgif-4-0fa2517bc8.gif](https://s2.loli.net/2023/04/13/Hqf2gUPcvVdL9TQ.gif)
+
 ## Features
 - [x] Click to create notes
 - [x] Click-and-drag to create notes

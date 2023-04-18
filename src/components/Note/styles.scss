@@ -13,7 +13,7 @@
     cursor: text;
 }
 
-textarea {
+textarea, .edit-node {
     flex: 1;
     border: none;
     outline: none;
@@ -23,6 +23,12 @@ textarea {
     overflow: scroll;
     resize: none;
     background-color: transparent;
+}
+
+.edit-node[contenteditable]:empty::before {
+    content: 'Type something...';
+    font-family: monospace;
+    color: rgb(118, 118, 118);
 }
 
 // max-width: ${props => props.isShowButton ? '100%' : 0};

@@ -1,6 +1,7 @@
 import { MouseEvent, PureComponent } from 'react'
 import { NoteProps } from '../../types/NodeType'
 import { Resizer } from '../Resizer'
+import EditNode from '../EditNode'
 import cx from 'classnames'
 import './styles.scss'
 
@@ -14,24 +15,28 @@ type NoteType = {
 }
 
 export default class Note extends PureComponent<NoteType> {
-  handleEdit = (e: any) => {
-    const { note, isEditing, onSave } = this.props
-    if (!isEditing) return
-    onSave({ ...note, text: e.target.value })
+  state = {
+    html: this.props.note.text,
   }
+
+  // handleEdit = (e: any) => {
+  //   const { note, isEditing, onSave } = this.props
+  //   if (!isEditing) return
+  //   onSave({ ...note, text: e.target.value })
+  // }
 
   handleMouseDown = (e: MouseEvent) => {
     e.stopPropagation()
 
-    const { isEditing, isSelected, note, onEdit, onSave, onSelect } = this.props
+    const { isEditing, isSelected, note, onSave, onSelect } = this.props
+    console.log('mouse down', isEditing)
+
     if (isSelected && isEditing) return
     if (!isSelected) onSelect(note.nid)
 
     const { clientX: startX, clientY: startY } = e
 
-    let isDragging = false
     const onMove = (event: any) => {
-      isDragging = true
       const { clientX, clientY } = event
       const deltaX = clientX - startX
       const deltaY = clientY - startY
@@ -39,7 +44,6 @@ export default class Note extends PureComponent<NoteType> {
     }
 
     const onMoveUp = () => {
-      if (!isDragging) onEdit(note.nid)
       document.removeEventListener('mousemove', onMove)
       document.removeEventListener('mouseup', onMoveUp)
     }
@@ -70,9 +74,16 @@ export default class Note extends PureComponent<NoteType> {
     document.addEventListener('mouseup', onMoveUp)
   }
 
+  handleEditNote = (html: string) => {
+    this.setState({ html })
+    const { note, isEditing, onEdit } = this.props
+    if (!isEditing) onEdit(note.nid)
+  }
+
   render() {
     const { isEditing, isSelected, note, onSave } = this.props
-    const { x, y, z, w, h, text, color } = note
+    const { x, y, z, w, h, color } = note
+    const { html } = this.state
 
     const className = cx(
       'note',
@@ -85,7 +96,7 @@ export default class Note extends PureComponent<NoteType> {
       zIndex: z,
       width: w,
       height: h,
-      backgroundColor: color
+      backgroundColor: color,
     }
 
     return (
@@ -97,7 +108,7 @@ export default class Note extends PureComponent<NoteType> {
         onSave={onSave}
         onMouseDown={this.handleMouseDown}
       >
-        {isEditing ? (
+        {/* {isEditing ? (
           <textarea
             value={text}
             onInput={this.handleEdit}
@@ -109,7 +120,11 @@ export default class Note extends PureComponent<NoteType> {
             value={text}
             placeholder="Type something..."
           ></textarea>
-        )}
+        )} */}
+        <EditNode
+          value={html}
+          onChange={this.handleEditNote}
+        />
       </Resizer>
     )
   }
